@@ -9,7 +9,9 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      cartItems: [],
+      cartItems: localStorage.getItem("cart")
+        ? JSON.parse(localStorage.getItem("cart"))
+        : [],
       products: data.products,
       size: "",
       sort: "",
@@ -63,6 +65,10 @@ class App extends React.Component {
     this.setState({
       cartItems: cartItems.filter((item) => item._id !== product._id),
     });
+    localStorage.setItem(
+      "cart",
+      JSON.stringify(cartItems.filter((item) => item._id !== product._id))
+    );
   };
 
   addToCart = (product) => {
@@ -79,6 +85,12 @@ class App extends React.Component {
       cartItems.push({ ...product, count: 1 });
     }
     this.setState({ cartItems: cartItems });
+    localStorage.setItem("cart", JSON.stringify(cartItems));
+  };
+
+  createOrder = (order) => {
+    console.log(order);
+    alert(`Need to save order ${order.name}`)
   };
 
   render() {
@@ -106,6 +118,7 @@ class App extends React.Component {
               <Cart
                 cartItems={this.state.cartItems}
                 removeFromCart={this.removeFromCart}
+                createOrder={this.createOrder}
               />
             </div>
           </div>
